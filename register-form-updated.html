@@ -1121,6 +1121,24 @@
                     businessPlan    : formData.get('businessPlan')    || ''
                 };
             }
+            // التحقق من تطابق كلمة المرور ✅
+            const password = formData.get('password');
+            const confirmPassword = formData.get('confirmPassword');
+
+            if (!password) {
+                showMsg('يرجى إدخال كلمة المرور', 'error');
+                return;
+             }
+
+             if (password !== confirmPassword) {
+                 showMsg('كلمات المرور غير متطابقة', 'error');
+                 return;
+             }
+
+             if (password.length < 8) {
+                 showMsg('كلمة المرور يجب أن تكون 8 أحرف على الأقل', 'error');
+                 return;
+                 }
             // Save user info to localStorage
             const userData = {
                 fullName: `${firstNameAr} ${lastNameAr}`,
