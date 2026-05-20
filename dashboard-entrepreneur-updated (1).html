@@ -850,7 +850,7 @@
         // Logout
         function logout() {
             if (confirm('هل أنت متأكد من تسجيل الخروج؟')) {
-                localStorage.removeItem('userData');
+                localStorage.setItem('isLoggedin','false');
                 window.location.href = 'login-updated.html';
             }
         }
