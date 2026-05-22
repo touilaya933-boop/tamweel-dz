@@ -519,7 +519,7 @@
              const userData = JSON.parse(localStorage.getItem('userData') || '{}');
 
              // التحقق: هل يوجد حساب مسجل؟
-             if (!userData.email) {
+             if (userData.email) {
                 showError('لا يوجد حساب مسجل. يرجى التسجيل أولاً');
                 return;
              }
