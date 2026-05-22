@@ -1122,21 +1122,89 @@
                 };
             }
             // Save user info to localStorage
-            const userData = {
-                fullName: `${firstNameAr} ${lastNameAr}`,
+            // ✅ التعديل - حفظ بيانات التسجيل في الوضع التجريبي
+
+            // أولاً: جمع بيانات الخطوة 1
+            const step1Data = new FormData(document.querySelector('[data-step="1"]'));
+            const firstNameAr = step1Data.get('firstNameAr') || '';
+            const lastNameAr = step1Data.get('lastNameAr') || '';
+            const firstNameEn = step1Data.get('firstNameEn') || '';
+            const lastNameEn = step1Data.get('lastNameEn') || '';
+            const gender = step1Data.get('gender') || '';
+            const nationalId = step1Data.get('nationalId') || '';
+            const birthDate = step1Data.get('birthDate') || '';
+            const birthPlace = step1Data.get('birthPlace') || '';
+
+            // ثانياً: جمع بيانات الخطوة 2
+            const step2Form = document.querySelector('[data-step="2"]');
+            const step2Data = step2Form ? Object.fromEntries(new FormData(step2Form)) : {};
+
+            // ثالثاً: جمع بيانات الخطوة 3
+            const step3Data = new FormData(document.querySelector('[data-step="3"]'));
+            const wilaya = step3Data.get('wilaya') || '';
+            const phone = step3Data.get('phone') || '';
+            const address = step3Data.get('address') || '';
+            const email = step3Data.get('email') || '';
+            const password = step3Data.get('password') || '';
+            const confirmPassword = step3Data.get('confirmPassword') || '';
+
+            // ✅ تحقق من تطابق كلمات المرور
+             if (!password) {
+                  showMsg('يرجى إدخال كلمة المرور', 'error');
+                  return;
+             }
+
+              if (password !== confirmPassword) {
+                  showMsg('كلمات المرور غير متطابقة', 'error');
+                  return;
+              }
+
+             if (password.length < 8) {
+                 showMsg('كلمة المرور يجب أن تكون 8 أحرف على الأقل', 'error');
+                 return;
+             }
+
+             // ✅ بناء كائن userData الكامل
+              const userData = {
+               // البيانات الشخصية
+                fullName        : `${firstNameAr} ${lastNameAr}`.trim(),
                 fullNameAr      : `${firstNameAr} ${lastNameAr}`.trim(),
                 fullNameEn      : `${firstNameEn} ${lastNameEn}`.trim(),
-                firstNameAr, lastNameAr,
-                firstNameEn, lastNameEn,
-                gender, nationalId,
-                birthDate, birthPlace,
-                wilaya, phone, address,
-                email: email,
-                password        : formData.get('password') || '',
-                accountType: accountType,...step2Data,
+                firstNameAr, 
+                lastNameAr,
+                firstNameEn, 
+                lastNameEn,
+                 gender, 
+                nationalId,
+                birthDate, 
+                birthPlace,
+    
+                 // بيانات التواصل
+                wilaya, 
+                phone, 
+                address,
+                email,
+                password,  // ✅ احفظ كلمة المرور بعد التحقق
+                accountType,
+    
+                // بيانات نوع الحساب
+                ...step2Data,
+    
+               // وقت التسجيل
                 registeredAt: new Date().toISOString()
             };
-            localStorage.setItem('userData', JSON.stringify(userData));
+
+             // ✅ حفظ في localStorage
+              localStorage.setItem('userData', JSON.stringify(userData));
+
+              showMsg('تم التسجيل بنجاح!', 'success');
+
+              // توجيه للصفحة المناسبة
+              setTimeout(() => {
+                window.location.href = accountType === 'investor'
+                     ? 'login.html?type=investor'
+                     : 'login.html?type=entrepreneur';
+             }, 2000);
             
             // Simulate API call
             const submitBtn = document.getElementById('btnSubmit');
